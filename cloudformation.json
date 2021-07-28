@@ -1,0 +1,77 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "ECRName": {
+      "Type": "String"
+    },
+    "CodeCommitName": {
+      "Type": "String"
+    },
+    "ECSTaskLogGroupName": {
+      "Type": "String"
+    },
+    "CodeBuildLogGroupName": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "ECRRepository": {
+      "Type": "AWS::ECR::Repository",
+      "Properties": {
+        "RepositoryName": {
+          "Ref": "ECRName"
+        }
+      }
+    },
+    "CodeCommitRepo": {
+      "Type": "AWS::CodeCommit::Repository",
+      "Properties": {
+        "RepositoryName": {
+          "Ref": "CodeCommitName"
+        }
+      }
+    },
+    "ECSTaskLogGroup": {
+      "Type" : "AWS::Logs::LogGroup",
+      "Properties" : {
+          "LogGroupName" : {
+            "Ref": "ECSTaskLogGroupName"
+          }   
+      }
+   },
+    "CodeBuildLogGroup": {
+        "Type" : "AWS::Logs::LogGroup",
+        "Properties" : {
+            "LogGroupName" : {
+                "Ref": "CodeBuildLogGroupName"
+              }
+          }
+      }
+  },
+  "Outputs": {
+    "ECRRepositoryName": {
+      "Description": "ECR repository for AWS ECS cluster",
+      "Value": {
+        "Ref": "ECRRepository"
+      }
+    },
+    "CodeCommitRepositoryName": {
+      "Description": "Code Commit repository for AWS ECS cluster",
+      "Value": {
+        "Fn::GetAtt" : [ "CodeCommitRepo", "Name"] 
+      }
+    },
+     "ECSTaskLogGroup": {
+      "Description": "ECS Task Cloudwatch LogGroup name",
+      "Value": {
+        "Ref": "ECSTaskLogGroupName"
+      }
+    },
+    "CodeBuildLogGroup": {
+      "Description": "CodeBuild Cloudwatch LogGroup name",
+      "Value": {
+        "Ref": "CodeBuildLogGroupName"
+      }
+    }
+  }
+}
