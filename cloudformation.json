@@ -32,21 +32,21 @@
       }
     },
     "ECSTaskLogGroup": {
-      "Type" : "AWS::Logs::LogGroup",
-      "Properties" : {
-          "LogGroupName" : {
-            "Ref": "ECSTaskLogGroupName"
-          }   
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": {
+          "Ref": "ECSTaskLogGroupName"
+        }
       }
-   },
+    },
     "CodeBuildLogGroup": {
-        "Type" : "AWS::Logs::LogGroup",
-        "Properties" : {
-            "LogGroupName" : {
-                "Ref": "CodeBuildLogGroupName"
-              }
-          }
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": {
+          "Ref": "CodeBuildLogGroupName"
+        }
       }
+    }
   },
   "Outputs": {
     "ECRRepositoryName": {
@@ -58,10 +58,13 @@
     "CodeCommitRepositoryName": {
       "Description": "Code Commit repository for AWS ECS cluster",
       "Value": {
-        "Fn::GetAtt" : [ "CodeCommitRepo", "Name"] 
+        "Fn::GetAtt": [
+          "CodeCommitRepo",
+          "Name"
+        ]
       }
     },
-     "ECSTaskLogGroup": {
+    "ECSTaskLogGroup": {
       "Description": "ECS Task Cloudwatch LogGroup name",
       "Value": {
         "Ref": "ECSTaskLogGroupName"
