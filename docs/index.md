@@ -77,14 +77,10 @@
           - The cluster is deployed over 2AZs, with the container instances sitting in private subnets. We then use a public ALB to enable container services to be exposed to the public Internet, and a NAT Gateway to enable services to access the public Internet
           
           - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/ecs-cft.json">cloudformation template</a> from this link and Deploy it 
-            
-          - The setup for each cluster is shown below
-  
-             <img src="images/image1.png" class="inline" width="700" height="700"/> 
           
           - Once the Cloudformation stack is deployed successfully please capture all the output values
              
-             <img src="images/image2.png" class="inline" width="700" height="400"/> 
+             <img src="images/image1.png" class="inline" width="700" height="400"/> 
 
       - Configure AWS ECS repo and AWS CodeCommit 
   
@@ -92,7 +88,7 @@
 
           - Once the Cloudformation stack is deployed successfully please capture all the output values like AWS ECR, AWS CodeCommit, CloudWatch LogGroup name etc
           
-            <img src="images/image3.png" class="inline" width="700" height="200"/> 
+            <img src="images/image2.png" class="inline" width="700" height="200"/> 
           
           - Prepare the source code to deliver into the code commit repo we deployed recently
           
