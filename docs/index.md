@@ -84,7 +84,7 @@
           
           - Once the Cloudformation stack is deployed successfully please capture all the output values
              
-             <img src="images/image2.png" class="inline" width="700" height="200"/> 
+             <img src="images/image2.png" class="inline" width="700" height="400"/> 
 
       - Configure AWS ECS repo and AWS CodeCommit 
   
