@@ -62,13 +62,13 @@
 
           - Configure AWS ECS repo and AWS CodeCommit 
 
-      - Deploy a HelloWorld ECS task on the bare cluster
+      - Deploy a Hello ECS task on the bare cluster
 
       - Configure AWS CodePipeline
 
       - Perform Rolling Update
 
-  -  Prerequisite
+  - Prerequisite
       
       - Launch a bare AWS ECS cluster 
 
@@ -86,22 +86,34 @@
   
           - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/cloudformation.json">cloudformation template</a> from this link and Deploy it
 
-          - Once the Cloudformation stack is deployed successfully please capture all the output values like AWS ECR, AWS CodeCommit, CloudWatch LogGroup name etc
+          - Once the Cloudformation stack is deployed successfully please capture all the output values like AWS ECR name, AWS ECR RepoUri, AWS CodeCommit name, CloudWatch LogGroup name etc
           
             <img src="images/image2.png" class="inline" width="700" height="200"/> 
           
           - Prepare the source code to deliver into the code commit repo we deployed recently
           
-              - Download & Unzip the <a href="https://github.com/sanchitdilipjain/aws-glue-databrew/blob/main/cloudformation.json">code base</a> that we will store into code commit 
+              - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/tree/main/code">code base</a> that we will store into code commit 
               
-              - Run below commands to clone & initialise the empty code commit repository and upload the code 
-                  
-                    mkdir docker-app
-                    cd ~/docker-app
-                    git clone SRC_REPO_URL docker-app
+              - Update the buildspec.yml file with the correct URI and capture the value from Cloudformation output i.e. ECRRepositoryUri
+                
+                <img src="images/image3.png" class="inline" width="700" height="300"/> 
               
-
-    
-
+              - Run below commands to clone & initialise the empty code commit repository and upload the code
+              
+                <img src="images/image4.png" class="inline" width="700" height="400"/> 
+              
+              - Now we will verify the CodeCommit console to ensure the source code has been uploaded correctly
+              
+                <img src="images/image5.png" class="inline" width="700" height="150"/>
+                
+  - Deploy a Hello ECS task on the bare cluster
   
-
+      - Create an ECS task definition
+  
+      - Create an ECS service 
+  
+  
+  - Configure AWS CodePipeline
+  
+  
+  - Perform Rolling Update
