@@ -1,0 +1,37 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "taskdefinition": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "RequiresCompatibilities": [
+          "EC2"
+        ],
+        "ContainerDefinitions": [
+          {
+            "Name": "hello-ecs",
+            "Image": { "Fn::Join" : [ ".",[{"Ref":"AWS::AccountId"},"dkr","ecr",{ "Ref" : "AWS::Region" },"amazonaws","com/hello-ecr-repo"]]},
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": "/ecs/ecs-task-log",
+                "awslogs-region": { "Ref" : "AWS::Region" },
+                "awslogs-stream-prefix": "ecs"
+              }
+            },
+            "PortMappings": [
+              {
+                "ContainerPort": 8080,
+                "Protocol": "tcp",
+                "HostPort": 8080
+              }
+            ],
+            "Cpu": 512,
+            "Memory": 256,
+            "Essential": true
+          }
+        ]
+      }
+    }
+  }
+}
