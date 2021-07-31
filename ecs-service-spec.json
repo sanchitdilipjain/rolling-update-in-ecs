@@ -1,0 +1,81 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "VpcId": {
+      "Type": "String"
+    },
+    "ALBListernARN": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "ALBTargetGroup": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "Name": "hello-ecs-tg",
+        "Port": 8080,
+        "Protocol": "HTTP",
+        "HealthCheckIntervalSeconds": 5,
+        "HealthCheckPath": "/ping",
+        "HealthCheckTimeoutSeconds": 5,
+        "HealthyThresholdCount": 2,
+        "TargetGroupAttributes": [
+          {
+            "Key": "deregistration_delay.timeout_seconds",
+            "Value": "60"
+          }
+        ],
+        "VpcId": {
+          "Ref": "VpcId"
+        }
+      }
+    },
+    "ALBTGRule": {
+      "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+      "Properties": {
+        "Actions": [
+          {
+            "Type": "forward",
+            "ForwardConfig": {
+              "TargetGroups": [
+                {
+                  "TargetGroupArn": {
+                    "Ref": "ALBListernARN"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "Conditions": [
+          {
+            "Field": "path-pattern",
+            "PathPatternConfig": {
+              "Values": [
+                "/hello/*"
+              ]
+            }
+          }
+        ],
+        "ListenerArn": {
+          "Ref": "ALBListernARN"
+        },
+        "Priority": 10
+      }
+    }
+  },
+  "Outputs": {
+    "ALBTargetGroupName": {
+      "Description": "AWS ALB TargetGroup Name",
+      "Value": {
+        "Ref": "ALBTargetGroup"
+      }
+    },
+    "ALBTargetGroupRuleName": {
+      "Description": "AWS ALB TargetGroup Rule Name",
+      "Value": {
+        "Ref": "ALBTGRule"
+      }
+    }
+  }
+}
