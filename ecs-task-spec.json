@@ -1,21 +1,76 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Resources": {
+    "Role": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Path": "/",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["ecs.amazonaws.com","ecs-tasks.amazonaws.com"]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "root",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Resource": "*",
+                  "Effect": "Allow",
+                  "Action": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
     "taskdefinition": {
       "Type": "AWS::ECS::TaskDefinition",
       "Properties": {
         "RequiresCompatibilities": [
           "EC2"
         ],
+        "ExecutionRoleArn": {
+          "Ref": "Role"
+        },
+        "NetworkMode": "bridge",
         "ContainerDefinitions": [
           {
             "Name": "hello-ecs",
-            "Image": { "Fn::Join" : [ ".",[{"Ref":"AWS::AccountId"},"dkr","ecr",{ "Ref" : "AWS::Region" },"amazonaws","com/hello-ecr-repo"]]},
+            "Image": {
+              "Fn::Join": [
+                ".",
+                [
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  "dkr",
+                  "ecr",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  "amazonaws",
+                  "com/hello-ecr-repo"
+                ]
+              ]
+            },
             "LogConfiguration": {
               "LogDriver": "awslogs",
               "Options": {
-                "awslogs-group": "/ecs/ecs-task-log",
-                "awslogs-region": { "Ref" : "AWS::Region" },
+                "awslogs-group": "/ecs/hello-ecs",
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                },
                 "awslogs-stream-prefix": "ecs"
               }
             },

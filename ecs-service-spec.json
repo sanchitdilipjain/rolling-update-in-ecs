@@ -4,7 +4,7 @@
     "VpcId": {
       "Type": "String"
     },
-    "ALBListernARN": {
+    "PublicLoadBalancer": {
       "Type": "String"
     },
     "TaskDefinitionARN": {
@@ -22,16 +22,29 @@
         "HealthCheckPath": "/ping",
         "HealthCheckTimeoutSeconds": 5,
         "HealthyThresholdCount": 2,
-        "TargetGroupAttributes": [
-          {
-            "Key": "deregistration_delay.timeout_seconds",
-            "Value": "60"
-          }
-        ],
+        "TargetType":"instance",
         "VpcId": {
           "Ref": "VpcId"
         }
       }
+    },
+    "PublicLoadBalancerListener": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+          "DefaultActions": [
+            {
+               "TargetGroupArn": {
+                    "Ref": "ALBTargetGroup"
+                  },
+                "Type": "forward"
+                }
+                ],
+          "LoadBalancerArn": {
+                "Ref": "PublicLoadBalancer"
+            },
+          "Port": 8080,
+          "Protocol": "HTTP"
+            }
     },
     "ALBTGRule": {
       "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
@@ -61,7 +74,7 @@
           }
         ],
         "ListenerArn": {
-          "Ref": "ALBListernARN"
+          "Ref": "PublicLoadBalancerListener"
         },
         "Priority": 10
       }
@@ -83,10 +96,6 @@
             "ContainerName": "hello-ecs"
           }
         ],
-        "DeploymentConfiguration": {
-          "MaximumPercent": 200,
-          "MinimumHealthyPercent": 50
-        },
         "SchedulingStrategy": "REPLICA",
         "HealthCheckGracePeriodSeconds": 8,
         "ServiceName": "hello-ecs",
@@ -103,7 +112,7 @@
               {
                 "Ref": "AWS::AccountId"
               },
-              "cluster/dev"
+              "cluster/dev-cluster"
             ]
           ]
         },
@@ -115,21 +124,33 @@
     "Role": {
       "Type": "AWS::IAM::Role",
       "Properties": {
+        "Path": "/",
         "AssumeRolePolicyDocument": {
-          "Version": "2008-10-17",
+          "Version": "2012-10-17",
           "Statement": [
             {
-              "Sid": "",
               "Effect": "Allow",
               "Principal": {
-                "Service": "ecs.amazonaws.com"
+                "Service": ["ecs.amazonaws.com","ecs-tasks.amazonaws.com"]
               },
               "Action": "sts:AssumeRole"
             }
           ]
         },
-        "ManagedPolicyArns": [
-          "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
+        "Policies": [
+          {
+            "PolicyName": "root",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Resource": "*",
+                  "Effect": "Allow",
+                  "Action": "*"
+                }
+              ]
+            }
+          }
         ]
       }
     }

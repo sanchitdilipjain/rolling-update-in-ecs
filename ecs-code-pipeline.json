@@ -10,9 +10,6 @@
         "Cluster": {
             "Type": "String"
         },
-        "ContainerName": {
-            "Type": "String"
-        },
         "Service": {
             "Type": "String"
         },
@@ -21,7 +18,7 @@
         }
     },
     "Resources": {
-        "CodeBuildServiceRole": {
+        "IAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "Path": "/",
@@ -31,7 +28,7 @@
                         {
                             "Effect": "Allow",
                             "Principal": {
-                                "Service": "codebuild.amazonaws.com"
+                                "Service": ["codebuild.amazonaws.com","codepipeline.amazonaws.com","events.amazonaws.com"]
                             },
                             "Action": "sts:AssumeRole"
                         }
@@ -47,92 +44,6 @@
                                     "Resource": "*",
                                     "Effect": "Allow",
                                     "Action": "*"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        "CodePipelineServiceRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "Path": "/",
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": "codepipeline.amazonaws.com"
-                            },
-                            "Action": "sts:AssumeRole"
-                        }
-                    ]
-                },
-                "Policies": [
-                    {
-                        "PolicyName": "root",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Resource": "*",
-                                    "Effect": "Allow",
-                                    "Action": "*"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        "AmazonCloudWatchEventRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "events.amazonaws.com"
-                                ]
-                            },
-                            "Action": "sts:AssumeRole"
-                        }
-                    ]
-                },
-                "Path": "/",
-                "Policies": [
-                    {
-                        "PolicyName": "cwe-pipeline-execution",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "codepipeline:StartPipelineExecution",
-                                    "Resource": {
-                                        "Fn::Join": [
-                                            "",
-                                            [
-                                                "arn:aws:codepipeline:",
-                                                {
-                                                    "Ref": "AWS::Region"
-                                                },
-                                                ":",
-                                                {
-                                                    "Ref": "AWS::AccountId"
-                                                },
-                                                ":",
-                                                {
-                                                    "Ref": "Pipeline"
-                                                }
-                                            ]
-                                        ]
-                                    }
                                 }
                             ]
                         }
@@ -207,7 +118,7 @@
                         },
                         "RoleArn": {
                             "Fn::GetAtt": [
-                                "AmazonCloudWatchEventRole",
+                                "IAMRole",
                                 "Arn"
                             ]
                         },
@@ -228,7 +139,7 @@
                 },
                 "Source": {
                     "Type": "CODEPIPELINE",
-                    "BuildSpec": "version: 0.2\nphases:\n  pre_build:\n    commands:\n      - $(aws ecr get-login --no-include-email)\n      - TAG=\"$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)\"\n      - IMAGE_URI=\"${REPOSITORY_URI}:${TAG}\"\n  build:\n    commands:\n      - docker build --tag \"$IMAGE_URI\" .\n  post_build:\n    commands:\n      - docker push \"$IMAGE_URI\"\n      - printf '[{\"name\":\"${ContainerName}\",\"imageUri\":\"%s\"}]' \"$IMAGE_URI\" > images.json\nartifacts:\n  files: images.json\n"
+                    "BuildSpec": "version: 0.2\nphases:\n  pre_build:\n    commands:\n      - $(aws ecr get-login --no-include-email)\n      - TAG=\"$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)\"\n      - IMAGE_URI=\"${REPOSITORY_URI}:${TAG}\"\n  build:\n    commands:\n      - docker build --tag \"$IMAGE_URI\" .\n  post_build:\n    commands:\n      - docker push \"$IMAGE_URI\"\n      - printf '[{\"name\":\"hello-ecs\",\"imageUri\":\"%s\"}]' \"$IMAGE_URI\" > images.json\nartifacts:\n  files: images.json\n"
                 },
                 "Environment": {
                     "ComputeType": "BUILD_GENERAL1_SMALL",
@@ -239,12 +150,6 @@
                             "Name": "AWS_DEFAULT_REGION",
                             "Value": {
                                 "Ref": "AWS::Region"
-                            }
-                        },
-                        {
-                            "Name": "ContainerName",
-                            "Value": {
-                                "Ref": "ContainerName"
                             }
                         },
                         {
@@ -259,7 +164,7 @@
                     "Ref": "AWS::StackName"
                 },
                 "ServiceRole": {
-                    "Ref": "CodeBuildServiceRole"
+                    "Ref": "IAMRole"
                 }
             }
         },
@@ -268,7 +173,7 @@
             "Properties": {
                 "RoleArn": {
                     "Fn::GetAtt": [
-                        "CodePipelineServiceRole",
+                        "IAMRole",
                         "Arn"
                     ]
                 },
