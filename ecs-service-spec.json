@@ -6,6 +6,9 @@
     },
     "ALBListernARN": {
       "Type": "String"
+    },
+    "TaskDefinitionARN": {
+      "Type": "String"
     }
   },
   "Resources": {
@@ -15,7 +18,7 @@
         "Name": "hello-ecs-tg",
         "Port": 8080,
         "Protocol": "HTTP",
-        "HealthCheckIntervalSeconds": 5,
+        "HealthCheckIntervalSeconds": 10,
         "HealthCheckPath": "/ping",
         "HealthCheckTimeoutSeconds": 5,
         "HealthyThresholdCount": 2,
@@ -40,7 +43,7 @@
               "TargetGroups": [
                 {
                   "TargetGroupArn": {
-                    "Ref": "ALBListernARN"
+                    "Ref": "ALBTargetGroup"
                   }
                 }
               ]
@@ -62,6 +65,73 @@
         },
         "Priority": 10
       }
+    },
+    "ECSService": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Role": {
+          "Ref": "Role"
+        },
+        "LaunchType": "EC2",
+        "DesiredCount": "2",
+        "LoadBalancers": [
+          {
+            "TargetGroupArn": {
+              "Ref": "ALBTargetGroup"
+            },
+            "ContainerPort": "8080",
+            "ContainerName": "hello-ecs"
+          }
+        ],
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50
+        },
+        "SchedulingStrategy": "REPLICA",
+        "HealthCheckGracePeriodSeconds": 8,
+        "ServiceName": "hello-ecs",
+        "Cluster": {
+          "Fn::Join": [
+            ":",
+            [
+              "arn",
+              "aws",
+              "ecs",
+              {
+                "Ref": "AWS::Region"
+              },
+              {
+                "Ref": "AWS::AccountId"
+              },
+              "cluster/dev"
+            ]
+          ]
+        },
+        "TaskDefinition": {
+          "Ref": "TaskDefinitionARN"
+        }
+      }
+    },
+    "Role": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2008-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
+        ]
+      }
     }
   },
   "Outputs": {
@@ -75,6 +145,12 @@
       "Description": "AWS ALB TargetGroup Rule Name",
       "Value": {
         "Ref": "ALBTGRule"
+      }
+    },
+    "ECSServiceName": {
+      "Description": "AWS ECS Service Name",
+      "Value": {
+        "Ref": "ECSService"
       }
     }
   }
