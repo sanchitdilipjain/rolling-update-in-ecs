@@ -4,9 +4,9 @@
 
   1. What is AWS ECS?
 
-      - Amazon Elastic Container Service (Amazon ECS) is a fully managed container orchestration service that offers simplfied deploy, manage, and scale containerized applications. It deeply integrates with the rest of the AWS platform to provide a secure and easy-to-use solution for running container workloads in the cloud.
+      - Amazon Elastic Container Service (Amazon ECS) is a fully managed container orchestration service that offers simplified deploy, manage, and scale containerized applications. It deeply integrates with the rest of the AWS platform to provide a secure and easy-to-use solution for running container workloads in the cloud.
 
-      - Amazon ECS are a particularly attractive delivery vehicle for CI/CD for the following reasons
+      - Amazon ECS is a particularly attractive delivery vehicle for CI/CD for the following reasons
 
         - Speed in terms of deployment
 
@@ -14,9 +14,9 @@
 
         - Single artifact from local to production
 
-      - Below are the keys of ECS
+      - Below are the keys to ECS
 
-        - **Task definition**: The task definition is a text file, in JSON format that allow to specify details like launch type, CPU and memory requirements, ports to be opened, and data volumes should be used with the containers in the task.
+        - **Task definition**: The task definition is a text file, in JSON format that allows specifying details like launch type, CPU and memory requirements, ports to be opened, and data volumes that should be used with the containers in the task.
 
         - **Task**: A task is the instantiation of a task definition within a cluster
 
@@ -32,7 +32,7 @@
 
   3. How does AWS enable CI/CD?
 
-      - AWS offers different services which simplify to configure CI/CD pipelines, and further templatize these pipelines to promote the reusability for multiple services. Relevant AWS services include:
+      - AWS offers different services that simplify configuring CI/CD pipelines and further templatizing these pipelines to promote the reusability of multiple services. Relevant AWS services include:
 
         - AWS CodeCommit as source code repositories
 
@@ -44,9 +44,9 @@
 
         - AWS CloudFormation to deploy and update infrastructure resources.
 
-  4. What is rolling update in AWS ECS?
+  4. What is the rolling update in AWS ECS?
 
-      - In rolling update, Amazon ECS service scheduler swap the currently running tasks with new tasks. The number of tasks that Amazon ECS adds or removes from the service during a rolling update is managed by the deployment configuration. The deployment configuration consists of the minimumHealthyPercent and maximumPercent, both of these values are very important to ensure ECS task is up & running during updates.
+      - In a rolling update, the Amazon ECS service scheduler swap the currently running tasks with new tasks. The number of tasks that Amazon ECS adds or removes from the service during a rolling update is managed by the deployment configuration. The deployment configuration consists of the minimumHealthyPercent and maximumPercent, both of these values are very important to ensure an ECS task is up & running during updates.
 
       - The minimumHealthyPercent represents the lower limit on the number of tasks that should be running for a service during a deployment or when a container instance is draining, as a percent of the desired number of tasks for the service
 
@@ -54,7 +54,7 @@
 
 **Tutorial**
 
-  - In this section we will perform rolling updates on AWS ECS services, by:
+  - In this section, we will perform rolling updates on AWS ECS services, by:
   
       - Prerequisite 
 
@@ -72,7 +72,7 @@
       
       - Launch a bare AWS ECS cluster 
 
-          - In this demo, we will use ECS cluster running in a VPC
+          - In this demo, we will use an ECS cluster running in a VPC
 
           - The cluster is deployed over 2AZs, with the container instances sitting in private subnets. We then use a public ALB to enable container services to be exposed to the public Internet, and a NAT Gateway to enable services to access the public Internet
           
@@ -86,7 +86,7 @@
   
           - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/cloudformation.json">cloudformation template</a> from this link and Deploy it
 
-          - Once the Cloudformation stack is deployed successfully please capture all the output values like AWS ECR name, AWS ECR RepoUri, AWS CodeCommit name, CloudWatch LogGroup name etc
+          - Once the Cloudformation stack is deployed successfully please capture all the output values like AWS ECR name, AWS ECR RepoUri, AWS CodeCommit name, CloudWatch LogGroup name, etc
           
             <img src="images/image2.png" class="inline" width="700" height="200"/> 
           
@@ -98,7 +98,7 @@
                 
                 <img src="images/image3.png" class="inline" width="700" height="300"/> 
               
-              - Follow below steps to clone & initialise the empty code commit repository and upload the code
+              - Follow the below steps to clone & initialize the empty code commit repository and upload the code
               
                 <img src="images/image4.png" class="inline" width="700" height="400"/> 
               
@@ -130,7 +130,7 @@
 
               <img src="images/image7.png" class="inline" width="700" height="150"/> 
                
-          **Note**: The revision number will increment by 1, each time you register a new version of the task definition, for the first time revision should be 1
+          **Note**: The revision number will increment by 1, each time you register a new version of the task definition, for the first time revision, should be 1
   
       - Create an ECS service 
      
@@ -140,7 +140,7 @@
 
             - Attributes provided under ALB TargetGroup like Port, HealthCheck related parameters, etc.
 
-            - Action and Condition mention under ALB Listener Rule section
+            - Action and Condition mention under the ALB Listener Rule section
 
             - Attributes provided under AWS ECS service section like TaskDefinition, LoadBalancers, Cluster, etc.
 
@@ -154,7 +154,7 @@
   
       - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/ecs-service-spec.json">cloudformation template</a> from this link and Deploy it 
       
-      - This cloudformation stack will deploy followinf artifacts
+      - This cloudformation stack will deploy the following artifacts
 
            - IAM role required for AWS CodeBuild, AWS CodePipeline, and AWS AmazonCloudWatchEvent
 
@@ -180,7 +180,7 @@
   
   - **Perform Rolling Update**
   
-      - Let's modify server.js file and update the greeting message on line no 3, save and close the file.
+      - Let's modify the server.js file, update the greeting message in line no 3, and save and close the file.
       
         <img src="images/image12.png" class="inline" width="700" height="500"/> 
       
@@ -200,7 +200,7 @@
             
                 <img src="images/image15.png" class="inline" width="700" height="125"/>
             
-              - Post deployment
+              - Post-deployment
             
                 <img src="images/image16.png" class="inline" width="700" height="100"/>
 
