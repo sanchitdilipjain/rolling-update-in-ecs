@@ -190,14 +190,20 @@
         
       - Route to CodePipeline console to view the pipeline progress and post that verify the output
       
-          - Pipeline Execution: 
+          - Pipeline Execution 
 
             <img src="images/image14.png" class="inline" width="700" height="400"/>  
           
-          - Rolling update deployment: 
-
-            <img src="images/image15.png" class="inline" width="700" height="125"/>  
+          - Rolling update deployment 
+            
+              - During deployment 
+            
+                <img src="images/image15.png" class="inline" width="700" height="125"/>
+            
+              - Post deployment
+            
+                <img src="images/image16.png" class="inline" width="700" height="100"/>
 
           - Test the application 
 
-            <img src="images/image15.png" class="inline" width="700" height="125"/>   
+            <img src="images/image17.png" class="inline" width="700" height="100"/>   
