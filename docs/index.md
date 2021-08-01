@@ -68,7 +68,7 @@
 
       - Perform Rolling Update
 
-  - Prerequisite
+  - **Prerequisite**
       
       - Launch a bare AWS ECS cluster 
 
@@ -80,7 +80,7 @@
           
           - Once the Cloudformation stack is deployed successfully please capture all the output values
              
-             <img src="images/image1.png" class="inline" width="700" height="400"/> 
+            <img src="images/image1.png" class="inline" width="700" height="400"/> 
 
       - Configure AWS ECS repo and AWS CodeCommit 
   
@@ -98,7 +98,7 @@
                 
                 <img src="images/image3.png" class="inline" width="700" height="300"/> 
               
-              - Run below commands to clone & initialise the empty code commit repository and upload the code
+              - Follow below steps to clone & initialise the empty code commit repository and upload the code
               
                 <img src="images/image4.png" class="inline" width="700" height="400"/> 
               
@@ -106,14 +106,94 @@
               
                 <img src="images/image5.png" class="inline" width="700" height="150"/>
                 
-  - Deploy a Hello ECS task on the bare cluster
+  - **Deploy a Hello ECS task on the bare cluster**
   
       - Create an ECS task definition
+      
+        - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/ecs-task-spec.json">cloudformation template</a> from this link and Deploy it 
+         
+        - Open the cloudformation file and understand the task definition spec, below are some important pointers:
+
+            - ECR repo in the container definition section, specify the same repo we created via Cloudformation stack under Prerequisite steps
+
+            - Cloudwatch LogGroup in the container definition section, specify the same repo we created via Cloudformation stack under Prerequisite steps
+
+            - Container port i.e. 8080 under port mapping section. 
+              
+        - Post the Cloudformation stack is deployed successfully route to ECS console under Task Definitions section verify the specs.
+
+            - Cloudformation Output: 
+           
+              <img src="images/image6.png" class="inline" width="700" height="150"/>  
+          
+            - ECS Console:
+
+              <img src="images/image7.png" class="inline" width="700" height="150"/> 
+               
+          **Note**: The revision number will increment by 1, each time you register a new version of the task definition, for the first time revision should be 1
   
       - Create an ECS service 
+     
+        - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/ecs-service-spec.json">cloudformation template</a> from this link and Deploy it 
+
+        - Open the cloudformation file and understand the task definition spec, below are some important pointers:
+
+            - Attributes provided under ALB TargetGroup like Port, HealthCheck related parameters, etc.
+
+            - Action and Condition mention under ALB Listener Rule section
+
+            - Attributes provided under AWS ECS service section like TaskDefinition, LoadBalancers, Cluster, etc.
+
+        - Post the Cloudformation stack is deployed successfully route to ECS console under Task Definitions section verify the service.
+             
+          <img src="images/image8.png" class="inline" width="700" height="125"/> 
+         
+          **Note**: The service is configured, but will fail to deploy any tasks as the task definition attached with the service is referring to an empty ECR repo
+  
+  - **Configure AWS CodePipeline & Execution**
+  
+      - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/ecs-service-spec.json">cloudformation template</a> from this link and Deploy it 
+      
+      - This cloudformation stack will deploy followinf artifacts
+
+           - IAM role required for AWS CodeBuild, AWS CodePipeline, and AWS AmazonCloudWatchEvent
+
+           - CodePipeline dependency such as AmazonCloudWatchEventRule, ArtifactS3Bucket, and CodeBuildProject
+
+           - Major chunk in this template is AWS CodePipeline structure and different stages are Source, Build, and Deploy
+                    
+      - Post the Cloudformation stack is deployed successfully route to AWS CodePipeline console and verify the pipeline execution.
+      
+          - Cloudformation Output: 
+             
+            <img src="images/image9.png" class="inline" width="700" height="150"/> 
+          
+          - Pipeline Execution Output: 
+        
+            <img src="images/image10.png" class="inline" width="700" height="400"/> 
+
+      
+      - Test the application 
+      
+        <img src="images/image11.png" class="inline" width="700" height="175"/> 
   
   
-  - Configure AWS CodePipeline
+  - **Perform Rolling Update**
   
-  
-  - Perform Rolling Update
+      - Let's modify server.js file and update the greeting message on line no 3, save and close the file.
+      
+        <img src="images/image12.png" class="inline" width="700" height="400"/> 
+      
+      - Once done, commit and push the change
+      
+        <img src="images/image13.png" class="inline" width="700" height="400"/> 
+        
+      - Route to CodePipeline console to view the pipeline progress and post that verify the output
+      
+          - Pipeline Execution Output: 
+
+            <img src="images/image14.png" class="inline" width="700" height="400"/>  
+
+          - Test the application 
+
+            <img src="images/image15.png" class="inline" width="700" height="175"/>   
