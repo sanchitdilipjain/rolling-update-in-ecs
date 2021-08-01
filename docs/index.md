@@ -84,7 +84,7 @@
 
       - Configure AWS ECS repo and AWS CodeCommit 
   
-          - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/cloudformation.json">cloudformation template</a> from this link and Deploy it
+          - Download the <a href="https://github.com/sanchitdilipjain/rolling-update-in-ecs/blob/main/ecs-prerequisites.json">cloudformation template</a> from this link and Deploy it
 
           - Once the Cloudformation stack is deployed successfully please capture all the output values like AWS ECR name, AWS ECR RepoUri, AWS CodeCommit name, CloudWatch LogGroup name, etc
           
