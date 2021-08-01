@@ -175,25 +175,29 @@
       
       - Test the application 
       
-        <img src="images/image11.png" class="inline" width="700" height="175"/> 
+        <img src="images/image11.png" class="inline" width="700" height="100"/> 
   
   
   - **Perform Rolling Update**
   
       - Let's modify server.js file and update the greeting message on line no 3, save and close the file.
       
-        <img src="images/image12.png" class="inline" width="700" height="400"/> 
+        <img src="images/image12.png" class="inline" width="700" height="500"/> 
       
       - Once done, commit and push the change
       
-        <img src="images/image13.png" class="inline" width="700" height="400"/> 
+        <img src="images/image13.png" class="inline" width="700" height="250"/> 
         
       - Route to CodePipeline console to view the pipeline progress and post that verify the output
       
-          - Pipeline Execution Output: 
+          - Pipeline Execution: 
 
             <img src="images/image14.png" class="inline" width="700" height="400"/>  
+          
+          - Rolling update deployment: 
+
+            <img src="images/image15.png" class="inline" width="700" height="125"/>  
 
           - Test the application 
 
-            <img src="images/image15.png" class="inline" width="700" height="175"/>   
+            <img src="images/image15.png" class="inline" width="700" height="125"/>   
