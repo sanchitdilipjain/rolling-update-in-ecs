@@ -7,11 +7,11 @@
         },
         "BranchName": {
             "Type": "String",
-            "Default": "main"
+            "Default": "master"
         },
         "Cluster": {
             "Type": "String",
-            "Default": ""
+            "Default": "dev-cluster"
         },
         "Service": {
             "Type": "String",
