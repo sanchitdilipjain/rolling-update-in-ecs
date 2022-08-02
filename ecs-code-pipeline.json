@@ -2,19 +2,24 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
         "CodeCommitRepo": {
-            "Type": "String"
+            "Type": "String",
+            "Default": "hello-ecr-repo"
         },
         "BranchName": {
-            "Type": "String"
+            "Type": "String",
+            "Default": "main"
         },
         "Cluster": {
-            "Type": "String"
+            "Type": "String",
+            "Default": ""
         },
         "Service": {
-            "Type": "String"
+            "Type": "String",
+            "Default": ""
         },
         "ECRRepo": {
-            "Type": "String"
+            "Type": "String",
+            "Default": "hello-ecr-repo"
         }
     },
     "Resources": {

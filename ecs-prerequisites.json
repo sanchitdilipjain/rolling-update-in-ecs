@@ -2,16 +2,20 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Parameters": {
     "ECRName": {
-      "Type": "String"
+      "Type": "String",
+      "Default": "hello-ecr-repo"
     },
     "CodeCommitName": {
-      "Type": "String"
+      "Type": "String",
+      "Default": "hello-ecr-repo"
     },
     "ECSTaskLogGroupName": {
-      "Type": "String"
+      "Type": "String",
+      "Default": "ecs-task-log"
     },
     "CodeBuildLogGroupName": {
-      "Type": "String"
+      "Type": "String",
+      "Default": "code-build-log"
     }
   },
   "Resources": {

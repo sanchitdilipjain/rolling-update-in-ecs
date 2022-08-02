@@ -3,7 +3,8 @@
     "Description": "EC2 ECS cluster running containers in a private subnet. Supports public facing load balancers, private internal load balancers, and both internal and external service discovery namespaces. Two AZs.",
     "Parameters": {
         "EnvironmentName": {
-            "Type": "String"
+            "Type": "String",
+            "Default": "dev"
         },
         "InstanceType": {
             "Type": "String",
